@@ -1,97 +1,24 @@
-import requests
-from pyfiglet import Figlet
-import os, time
-
-# Help! I'm trying to make this cool bot but my code is too messy :( Please help me organise it into reusable components.
-
-# Define your reusable functions here:
-# Make sure each function only does ONE thing!!!!!!!!!!!
-
-def guess_gender(name):
-    gender_resp = requests.get(f"https://api.genderize.io/?name={name}").json()
-    gender = gender_resp["gender"]
-    prob_percent = gender_resp["probability"] * 100
-    return [gender, prob_percent]
-
-###########################################
-
-def weird_weather_bot():
-    
-    f = Figlet(font="slant")
-    print(f.renderText("HEY!"))
-
-    print("Welcome to the weird weather bot :)")
-    print("-----------------------------------\n")
-    name = input("May I take your first name please? ")
-    gender_result = guess_gender(name)
-    gender = gender_result[0]
-    prob_percent = gender_result[1]
-    print(f"\nHmmm, I'm {prob_percent}% sure you are a {gender}.")
-    
-    gender_correct = input("Am I right? :) (Y/n)")
-    if gender_correct.lower() in ["", "yes", "y", "ye"]:
-        print("Wooooooh! Computer 1, Human 0.")
-    else:
-        print("Ahhhh, sorry! :(")
-
-    postcode_raw = input("\nSo, what's your postcode? ")
-    postcode_resp = requests.get(f"https://api.postcodes.io/postcodes/{postcode_raw}").json()
-
-    area = postcode_resp['result']['admin_ward']
-    longitude = postcode_resp['result']['longitude']
-    latitude = postcode_resp['result']['latitude']
-    print(f"Nice! so you live in {area}.\n")
-
-    print("Let me just check the weather there today...\n")
-    
-    for i in range(3):
-        time.sleep(1)
-        print("...")
-    
-    input("\nWould you like a cat fact while you wait? ")
-    print("Doesn't matter what you think, I'm going to give you one anyway :)")
-    time.sleep(3)
-    joke_resp = requests.get("https://catfact.ninja/fact").json()
-    joke = joke_resp['fact']
-    print("\n###########################")
-    print("CAT FACT:")
-    print(f"\n{joke}\n")
-    print("So interesting isn't it!")
-    print("###########################")
-
-    print("\nWaiting 5 seconds for you to read the fact...")
-    time.sleep(5)
-    print("\nNow, back to getting the weather...")
-
-    for i in range(3):
-        time.sleep(1)
-        print("...")
-
-    weather_resp = requests.get(f"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid=4d30afa58f6f935d861edecad3639cda").json()
-    # print(weather_resp)
-    weather_kelvin = weather_resp["main"]["temp"]
-    # convert to degrees
-    weather_degrees = int(weather_kelvin - 273.15)
-    main_weather_desc = weather_resp["weather"][0]["main"]
-    second_weather_desc = weather_resp["weather"][0]["description"]
-    print(f"\nThe weather in {area}:\n")
-    print(str(weather_degrees) + "℃")
-    print(f"{main_weather_desc} - {second_weather_desc}")
-    print("\nThank you! Bye.")
-
-weird_weather_bot()
+from Func2 import guess_gender, weird_weather_bot, postcode, ellipsis, CatFact, GetWeather
 
 
 # After you have written the reusable functions, answer the following:
 # Questions:
 # 1. What are the preconditions for your code not to break?
+# Make sure inputs are validated and to repeat the code if the postcode is not on the website
 # 2. Validate the user's input based on your preconditions.
 # 3. Why was it useful to use reusable components in this case? Please mention at least 2 reasons and don't forget to contextualise.
+# You would have less lines of code as functions are used mutliple times which removes unnecessary lenght and complexity
+# This is shown as the elipsis function removes the need for it to be repeated as the function can just be outputed twice
+# If code is reused then the code will be more reliable as it is old code that is already tried and tested
+# This is shown through the copying and slight modification of the if statement for the reply of gender if Y/N
 
 # Further Tasks:
 # 1. Put your functions in seperate appropriate files and import them in.
+# Func2.py
 # 2. Make sure all of your functions (except the main one) only do ONE thing or process.
+# COMPLETED
 # 3. Add your own twist to the code.
+# COMPLETED 
 
 # Extension:
 # Add the following apis as reusable components and use them in your code:
